@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="order-history-ImplementationFlow-test-suite.xml" />
+	<munit:test name="order-history-ImplementationFlow-test-suite-post:\v1\orders\history:application\json:poc-eapi-orders-configTest" doc:id="df2614b2-074c-438b-ac5e-4c5952c62151" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="6653e02c-0fcb-4220-8076-0707c29f93ad" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="order history sapi Request" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[MunitTools::getResourceAsString('order-history-response.json')]" mediaType="application/json" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="9dd93019-6d8a-4fc8-915b-c0200a1fa239" >
+				<munit:payload value="#[MunitTools::getResourceAsString('order-history-request.json')]" mediaType="application/json" />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to post:\v1\orders\history:application\json:poc-eapi-orders-config" doc:id="5b1f35b0-76c7-496a-8291-3f12fd0ed8be" name="post:\v1\orders\history:application\json:poc-eapi-orders-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="872768f5-684b-4db4-b885-658320cbcd67" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+		</munit:validation>
+	</munit:test>
+	
+	
+	
+	<munit:test name="order-history-ImplementationFlow--errorhandling" doc:id="923986ab-2b33-4490-9508-63c704587760" description="Test" expectedErrorType="HTTP:BAD_REQUEST">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="c2b5aac9-203d-49ac-9f72-460769aaf02d" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="order history sapi Request" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="HTTP:BAD_REQUEST" />
+				</munit-tools:then-return>
+			
+</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="da835189-116b-4ecb-85b3-d4ae73adc8b9" >
+				<munit:payload value="#[MunitTools::getResourceAsString('order-history-errorhandling-request.json')]" mediaType="application/json" />
+
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to post:\v1\orders\history:application\json:poc-eapi-orders-config" doc:id="8b6f1c13-76f6-458d-871d-daf4df3441bc" name="post:\v1\orders\history:application\json:poc-eapi-orders-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="9e2439a7-9d7b-434d-9f82-f096b341e927" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+		</munit:validation>
+	</munit:test>
+	
+
+</mule>

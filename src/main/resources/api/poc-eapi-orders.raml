@@ -1,0 +1,27 @@
+#%RAML 1.0
+title: poc-eapi-orders
+protocols:
+  - HTTP
+  - HTTPS
+version: v1
+
+
+traits:
+  Client-ID-Policy: !include /trait.raml
+
+/v1:
+  /orders:
+    /history:
+      post:
+        is: [Client-ID-Policy]
+        body:
+          application/json: !include examples/orders-history-request-file.json
+        responses:
+          200:
+            body:
+              application/json:
+                example:  !include examples/orders-history-response-file.json
+                
+                  
+            
+          

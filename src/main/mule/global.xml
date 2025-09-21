@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:request-config name="order-history" doc:name="HTTP Request configuration" doc:id="acda160a-a5cf-4b88-b9c8-78d02f3cf4e1" >
+		<http:request-connection host="${order.history.host}" />
+	</http:request-config>
+	<configuration-properties doc:name="Configuration properties" doc:id="43bf9354-d236-49e1-8002-d9e60966660b" file="dev.yaml" />
+</mule>

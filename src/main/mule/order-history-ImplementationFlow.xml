@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	
+	
+	  <flow name="post:\v1\orders\history:application\json:poc-eapi-orders-config">
+		<logger level="INFO" doc:name="***start flow***" doc:id="15690604-b14b-4415-bd54-3927d67e0bef" message="***start flow***#[payload]"/>
+		<logger level="INFO" doc:name="request to order history sapi" doc:id="4354709f-3cec-4831-8800-0543b470c1ea" message="request to order history sapi #[payload]"/>
+		<http:request method="POST" doc:name="order history sapi Request" doc:id="ce402cb1-c7de-4a13-a9c2-e88e1232b47b" config-ref="order-history" path="${order.history.path}">
+			<http:headers ><![CDATA[#[output application/java
+---
+{
+	"client_secret" : "222",
+	"client_id" : "1111"
+}]]]></http:headers>
+		</http:request>
+		<logger level="INFO" doc:name="response from order history eapi" doc:id="329b65d2-e19c-477f-bc69-54e8a706ae4c" message="response from order history eapi #[payload]"/>
+		<ee:transform doc:name="response mapping" doc:id="6ad2ce61-06ae-475f-9e73-5862ad57e919" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+    data: payload map (item, index) -> {
+        orderId: item.orderId__c,
+        orderDate: item.orderDate__c,
+        status: item.status__c,
+        customerId: item.customerId__c,
+        company: item.company__c
+    }
+}
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="***end flow***" doc:id="f301a8aa-1151-424c-a392-3400f8daaa7d" message="***end flow***#[payload]"/>
+		<error-handler ref="errorhandlingError_Handler" />
+    
+</flow>
+	</mule>

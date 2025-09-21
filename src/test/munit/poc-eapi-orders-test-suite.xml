@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="poc-eapi-orders-test-suite.xml" />
+	<munit:test name="poc-eapi-orders-test-suite-poc-eapi-ordr" doc:id="52aed203-7e69-4da7-93ff-d695f198d22c" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="33661474-e2f2-4ba3-92ae-382d661a3101" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="poc-eapi-orders-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="6e07f461-6007-4efa-8ae5-40c59a417ee8" >
+				<munit:payload value="#[MunitTools::getResourceAsString('order-history-request.json')]" mediaType="application/json" />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to poc-eapi-orders-main" doc:id="a5944699-5380-4a45-9b1a-c57750f7055c" name="poc-eapi-orders-main"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="6f4e3de0-a2a0-4cd8-9f72-74149c8525bd" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+		</munit:validation>
+	</munit:test>
+	
+	<munit:test name="APIKIT:BAD_REQUEST" doc:id="bcc528c1-5d3d-48cb-9be5-76ac00078ba5" description="Test" expectedErrorType="APIKIT:BAD_REQUEST">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="12106519-2cac-45d5-81c2-5c75fd036bd0" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="poc-eapi-orders-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:BAD_REQUEST" />
+				</munit-tools:then-return>
+			
+</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="83584b75-473f-407d-b5b1-45dc0cc5dc06" >
+				<munit:payload value="#[MunitTools::getResourceAsString('order-history-request.json')]" mediaType="application/json" />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to poc-eapi-orders-main" doc:id="c3701f66-dccc-404e-95bc-456f82e19711" name="poc-eapi-orders-main"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="4acbc014-eb3c-4a95-882a-bc9fec7c9593" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+		</munit:validation>
+	</munit:test>
+
+	<munit:test name="APIKIT:NOT_FOUND" doc:id="7fc98dbf-a217-43aa-bfae-e460041fbf8f" description="Test" expectedErrorType="APIKIT:NOT_FOUND">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="4a8c3f59-d6fc-4243-80a8-9829f3c0685a" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="poc-eapi-orders-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:NOT_FOUND" />
+				</munit-tools:then-return>
+			
+
+</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="5b31a962-a6c9-47f1-8866-8df56cb1d5c7" >
+				<munit:payload value="#[MunitTools::getResourceAsString('order-history-request.json')]" mediaType="application/json" />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to poc-eapi-orders-main" doc:id="e59f1f09-172e-4bca-b963-3d385f132b11" name="poc-eapi-orders-main"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="d4af9a1d-ed49-4fba-b94a-15c0bb4d1b9a" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+		</munit:validation>
+	</munit:test>
+	
+	
+	
+	
+	<munit:test name="APIKIT:METHOD_NOT_ALLOWED" doc:id="e8259716-0173-4bcd-93db-5ba8d8faae35" description="Test" expectedErrorType="APIKIT:METHOD_NOT_ALLOWED">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="90fed39b-4974-4250-bdff-2bff478bb158" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="poc-eapi-orders-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:METHOD_NOT_ALLOWED" />
+				</munit-tools:then-return>
+			
+
+
+</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="a22a3963-d44f-464a-a3d2-25efb7da0321" >
+				<munit:payload value="#[MunitTools::getResourceAsString('order-history-request.json')]" mediaType="application/json" />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to poc-eapi-orders-main" doc:id="25b167ef-a725-4fa3-b1bd-10eb19d0e925" name="poc-eapi-orders-main"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="86b9dd05-5f64-4a36-8718-ebdebd8d53a7" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+		</munit:validation>
+	</munit:test>
+	
+	
+	<munit:test name="APIKIT:NOT_ACCEPTABLE" doc:id="255c6e83-05bd-4f9c-9b7b-54c5e1162e22" description="Test" expectedErrorType="APIKIT:NOT_ACCEPTABLE">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="621f3cc9-5ced-4df0-97b0-9056ddc51200" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="poc-eapi-orders-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:NOT_ACCEPTABLE" />
+				</munit-tools:then-return>
+			
+
+
+</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="eff4e8a1-a24a-4551-b738-2ff24eae08f9" >
+				<munit:payload value="#[MunitTools::getResourceAsString('order-history-request.json')]" mediaType="application/json" />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to poc-eapi-orders-main" doc:id="76f572c6-734b-4598-bd10-83365885a119" name="poc-eapi-orders-main"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="cb505214-8989-4cc6-8b9d-1ef2edd29f0b" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+		</munit:validation>
+	</munit:test>
+	
+	<munit:test name="APIKIT:UNSUPPORTED_MEDIA_TYPE" doc:id="f3425f53-9a44-40ec-8593-a55b2f3fd6ae" description="Test" expectedErrorType="APIKIT:UNSUPPORTED_MEDIA_TYPE">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="70ee84e4-6c5a-4847-8332-ae11cc6719f5" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="poc-eapi-orders-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:UNSUPPORTED_MEDIA_TYPE" />
+				</munit-tools:then-return>
+			
+
+
+</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="2dc88ce0-2430-498a-b429-99737800263e" >
+				<munit:payload value="#[MunitTools::getResourceAsString('order-history-request.json')]" mediaType="application/json" />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to poc-eapi-orders-main" doc:id="6b7530b9-adec-49b4-8d7a-115c89d57bb2" name="poc-eapi-orders-main"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="e095aca5-e6d0-4d1f-a4c5-28eb1b331f1d" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+		</munit:validation>
+	</munit:test>
+	
+	<munit:test name="APIKIT:NOT_IMPLEMENTED" doc:id="62bcf5c8-8a09-444d-9e5e-022b374a141b" description="Test" expectedErrorType="APIKIT:NOT_IMPLEMENTED">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="5ffb101b-93d6-45c2-b113-8ac90f0b57ad" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="poc-eapi-orders-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:NOT_IMPLEMENTED" />
+				</munit-tools:then-return>
+			
+
+
+</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="78dbdcc3-3951-4c17-a30a-5dbf164ea415" >
+				<munit:payload value="#[MunitTools::getResourceAsString('order-history-request.json')]" mediaType="application/json" />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to poc-eapi-orders-main" doc:id="f1a3682d-7d7b-44cc-a1f6-df19a98735ce" name="poc-eapi-orders-main"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="e7b9468e-632e-4ba5-86a0-dae0d1c1624a" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+		</munit:validation>
+	</munit:test>
+</mule>
